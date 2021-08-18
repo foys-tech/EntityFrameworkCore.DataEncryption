@@ -25,7 +25,10 @@ namespace Microsoft.EntityFrameworkCore.DataEncryption.Migration
     /// </example>
     public static class EncryptionMigrator
     {
-        private static readonly MethodInfo SetMethod = typeof(DbContext).GetMethod(nameof(DbContext.Set));
+        private static readonly MethodInfo SetMethod =
+            typeof(DbContext).GetMethods()
+                .First(x => x.GetParameters().Length == 0 && x.Name == nameof(DbContext.Set));
+
 
         private static IQueryable<object> Set(this DbContext context, IEntityType entityType)
         {
@@ -54,7 +57,8 @@ namespace Microsoft.EntityFrameworkCore.DataEncryption.Migration
         /// <para>-or-</para>
         /// <para><paramref name="property"/> is <see langword="null"/>.</para>
         /// </exception>
-        public static async Task MigrateAsync(this DbContext context, IProperty property, ILogger logger = default, CancellationToken cancellationToken = default)
+        public static async Task MigrateAsync(this DbContext context, IProperty property, ILogger logger = default,
+            CancellationToken cancellationToken = default)
         {
             if (context is null)
             {
@@ -68,7 +72,8 @@ namespace Microsoft.EntityFrameworkCore.DataEncryption.Migration
 
             if (property.GetValueConverter() is not IEncryptionValueConverter converter)
             {
-                logger?.LogWarning("Property {Property} on entity type {EntityType} is not using an encryption value converter. ({Converter})",
+                logger?.LogWarning(
+                    "Property {Property} on entity type {EntityType} is not using an encryption value converter. ({Converter})",
                     property.Name, property.DeclaringEntityType.Name, property.GetValueConverter());
 
                 return;
@@ -76,7 +81,8 @@ namespace Microsoft.EntityFrameworkCore.DataEncryption.Migration
 
             if (converter.EncryptionProvider is not MigrationEncryptionProvider { IsEmpty: false })
             {
-                logger?.LogWarning("Property {Property} on entity type {EntityType} is not using a non-empty migration encryption value converter. ({EncryptionProvider})",
+                logger?.LogWarning(
+                    "Property {Property} on entity type {EntityType} is not using a non-empty migration encryption value converter. ({EncryptionProvider})",
                     property.Name, property.DeclaringEntityType.Name, converter.EncryptionProvider);
 
                 return;
@@ -99,7 +105,8 @@ namespace Microsoft.EntityFrameworkCore.DataEncryption.Migration
             await context.SaveChangesAsync(cancellationToken);
         }
 
-        private static async ValueTask MigrateAsyncCore(DbContext context, IEntityType entityType, ILogger logger = default, CancellationToken cancellationToken = default)
+        private static async ValueTask MigrateAsyncCore(DbContext context, IEntityType entityType,
+            ILogger logger = default, CancellationToken cancellationToken = default)
         {
             if (context is null)
             {
@@ -112,7 +119,8 @@ namespace Microsoft.EntityFrameworkCore.DataEncryption.Migration
             }
 
             var encryptedProperties = entityType.GetProperties()
-                .Select(p => (property: p, encryptionProvider: (p.GetValueConverter() as IEncryptionValueConverter)?.EncryptionProvider))
+                .Select(p => (property: p,
+                    encryptionProvider: (p.GetValueConverter() as IEncryptionValueConverter)?.EncryptionProvider))
                 .Where(p => p.encryptionProvider is MigrationEncryptionProvider { IsEmpty: false })
                 .Select(p => p.property)
                 .ToList();
@@ -123,18 +131,43 @@ namespace Microsoft.EntityFrameworkCore.DataEncryption.Migration
                 return;
             }
 
-            logger?.LogInformation("Loading data for {EntityType} ({PropertyCount} properties)...", entityType.Name, encryptedProperties.Count);
+            logger?.LogInformation("Loading data for {EntityType} ({PropertyCount} properties)...", entityType.Name,
+                encryptedProperties.Count);
 
-            var set = context.Set(entityType);
+            IQueryable<object> set;
+
+            if (entityType.IsOwned())
+            {
+                var ownerEntity = entityType.FindOwnership().PrincipalEntityType;
+                set = context.Set(ownerEntity);
+            }
+            else
+            {
+                set = context.Set(entityType);
+            }
+
             var list = await set.ToListAsync(cancellationToken);
-            logger?.LogInformation("Migrating data for {EntityType} ({RecordCount} records)...", entityType.Name, list.Count);
+            logger?.LogInformation("Migrating data for {EntityType} ({RecordCount} records)...", entityType.Name,
+                list.Count);
 
             foreach (var entity in list)
             {
                 var entry = context.Entry(entity);
                 foreach (var property in encryptedProperties)
                 {
-                    entry.Property(property.Name).IsModified = true;
+                    if (entityType.IsOwned())
+                    {
+                        var referenceEntry = entry.References.First(x => x.Metadata.Name == entityType.ShortName());
+
+                        if (referenceEntry.TargetEntry.IsKeySet)
+                        {
+                            referenceEntry.TargetEntry.Property(property.Name).IsModified = true;
+                        }
+                    }
+                    else
+                    {
+                        entry.Property(property.Name).IsModified = true;
+                    }
                 }
             }
         }
@@ -159,7 +192,8 @@ namespace Microsoft.EntityFrameworkCore.DataEncryption.Migration
         /// <para>-or-</para>
         /// <para><paramref name="entityType"/> is <see langword="null"/>.</para>
         /// </exception>
-        public static async Task MigrateAsync(this DbContext context, IEntityType entityType, ILogger logger = default, CancellationToken cancellationToken = default)
+        public static async Task MigrateAsync(this DbContext context, IEntityType entityType, ILogger logger = default,
+            CancellationToken cancellationToken = default)
         {
             if (context is null)
             {
@@ -190,7 +224,8 @@ namespace Microsoft.EntityFrameworkCore.DataEncryption.Migration
         /// <exception cref="ArgumentNullException">
         /// <para><paramref name="context"/> is <see langword="null"/>.</para>
         /// </exception>
-        public static async Task MigrateAsync(this DbContext context, ILogger logger = default, CancellationToken cancellationToken = default)
+        public static async Task MigrateAsync(this DbContext context, ILogger logger = default,
+            CancellationToken cancellationToken = default)
         {
             if (context is null)
             {
