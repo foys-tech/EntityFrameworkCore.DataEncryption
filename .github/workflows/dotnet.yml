@@ -17,10 +17,10 @@ jobs:
       - uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x'
-      - name: Build
-        run: dotnet build --configuration Release
+#      - name: Build
+#        run: dotnet build --configuration Release
       - name: Pack
-        run: dotnet pack --configuration Release --no-build --output .
+        run: dotnet pack --configuration Release --output . src/EntityFrameworkCore.DataEncryption/EntityFrameworkCore.DataEncryption.csproj
       - name: Publish
         run: dotnet nuget push EntityFrameworkCore.DataEncryption.3.0.0.nupkg --source https://nuget.pkg.github.com/foys-tech/index.json --api-key ${GITHUB_TOKEN}
         env:
