@@ -21,7 +21,7 @@ jobs:
         run: |
           dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --name github --username ${{ github.repository_owner }} --password ${{ github.token }} --store-password-in-clear-text
           dotnet pack --configuration Release
-          dotnet nuget push "EntityFrameworkCore.DataEncryption.3.0.0.nupkg" --source github
+          dotnet nuget push "bin/Release/EntityFrameworkCore.DataEncryption.3.0.0.nupkg" --source github
       # Publish
 #      - name: publish on version change
 #        id: publish_nuget
