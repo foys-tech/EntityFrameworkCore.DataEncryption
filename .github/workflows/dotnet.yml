@@ -19,8 +19,8 @@ jobs:
           dotnet-version: '5.0.x'
 #      - name: Build
 #        run: dotnet build --configuration Release
-      - name: Read file
-        run: cat /home/runner/.dotnet/sdk/5.0.101/Sdks/NuGet.Build.Tasks.Pack/build/NuGet.Build.Tasks.Pack.targets
+#      - name: Read file
+#        run: cat /home/runner/.dotnet/sdk/5.0.101/Sdks/NuGet.Build.Tasks.Pack/build/NuGet.Build.Tasks.Pack.targets
       - name: Pack
         run: dotnet pack --configuration Release --output . src/EntityFrameworkCore.DataEncryption/EntityFrameworkCore.DataEncryption.csproj
       - name: Publish
