@@ -17,11 +17,19 @@ jobs:
       - uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x'
-      - name: NuGet push
-        run: |
-          dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --name github --username ${{ github.repository_owner }} --password ${{ github.token }} --store-password-in-clear-text
-          dotnet pack --configuration Release
-          dotnet nuget push "bin/Release/EntityFrameworkCore.DataEncryption.3.0.0.nupkg" --source github
+      - name: Build
+        run: dotnet build --configuration Release
+      - name: Pack
+        run: dotnet pack --configuration Release --no-build --output .
+      - name: Publish
+        run: dotnet nuget push EntityFrameworkCore.DataEncryption.3.0.0.nupkg --source https://nuget.pkg.github.com/foys-tech/index.json --api-key ${GITHUB_TOKEN}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+          #          dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --name github --username ${{ github.repository_owner }} --password ${{ github.token }} --store-password-in-clear-text
+#          dotnet build --configuration Release
+#          dotnet pack --configuration Release
+#          dotnet nuget push "bin/Release/EntityFrameworkCore.DataEncryption.3.0.0.nupkg" --source github
       # Publish
 #      - name: publish on version change
 #        id: publish_nuget
