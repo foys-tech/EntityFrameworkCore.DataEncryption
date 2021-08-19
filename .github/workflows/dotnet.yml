@@ -17,4 +17,4 @@ jobs:
       - name: Add source
         run: dotnet nuget add source --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/foys-tech/index.json"
       - name: Publish
-        run: dotnet nuget push "Foys-Tech.EntityFrameworkCore.DataEncryption.5.0.0" --api-key ${{ secrets.GITHUB_TOKEN }} --source github
+        run: dotnet nuget push "Foys-Tech.EntityFrameworkCore.DataEncryption.5.0.0.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source github
