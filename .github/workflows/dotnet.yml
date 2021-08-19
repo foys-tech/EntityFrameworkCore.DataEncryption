@@ -24,7 +24,7 @@ jobs:
       - name: Pack
         run: dotnet pack --configuration Release --output . src/EntityFrameworkCore.DataEncryption/EntityFrameworkCore.DataEncryption.csproj
       - name: Publish
-        run: dotnet nuget push EntityFrameworkCore.DataEncryption.3.0.0.nupkg --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
+        run: dotnet nuget push EntityFrameworkCore.DataEncryption.3.0.0.nupkg --source https://nuget.pkg.github.com/${{ github.repository_owner }}/EntityFrameworkCore.DataEncryption/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
         
           #          dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --name github --username ${{ github.repository_owner }} --password ${{ github.token }} --store-password-in-clear-text
 #          dotnet build --configuration Release
