@@ -8,7 +8,7 @@
     <IsPackable>true</IsPackable>
 		<Version>5.0.0</Version>
 		<Authors>Filipe GOMES PEIXOTO(Extended)</Authors>
-		<PackageId>EntityFrameworkCore.DataEncryption</PackageId>
+		<PackageId>Foys-Tech.EntityFrameworkCore.DataEncryption</PackageId>
 		<PackageProjectUrl>https://github.com/foys-tech/EntityFrameworkCore.DataEncryption</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/foys-tech/EntityFrameworkCore.DataEncryption</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>

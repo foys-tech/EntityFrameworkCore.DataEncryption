@@ -9,61 +9,12 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-
-      # - name: Setup dotnet
-      #   uses: actions/setup-dotnet@v1
-      #   with:
-      #     dotnet-version: 3.1.200
       - uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x'
-      #      - name: Build
-      #        run: dotnet build --configuration Release
       - name: Pack
         run: dotnet pack --configuration Release --output . src/EntityFrameworkCore.DataEncryption/EntityFrameworkCore.DataEncryption.csproj
       - name: Add source
         run: dotnet nuget add source --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/foys-tech/index.json"
       - name: Publish
-        run: dotnet nuget push "EntityFrameworkCore.DataEncryption.3.0.0.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source github
-
-        #        dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --name github --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text
-        #        run: dotnet nuget push EntityFrameworkCore.DataEncryption.3.0.0.nupkg --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --api-key ${{ secrets.GITHUB_TOKEN }} 
-
-        #          dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --name github --username ${{ github.repository_owner }} --password ${{ github.token }} --store-password-in-clear-text
-      #          dotnet build --configuration Release
-      #          dotnet pack --configuration Release
-      #          dotnet nuget push "bin/Release/EntityFrameworkCore.DataEncryption.3.0.0.nupkg" --source github
-      # Publish
-#      - name: publish on version change
-#        id: publish_nuget
-#        uses: rohith/publish-nuget@v2
-#        with:
-#          # Filepath of the project to be packaged, relative to root of repository
-#          PROJECT_FILE_PATH: src/EntityFrameworkCore.DataEncryption/EntityFrameworkCore.DataEncryption.csproj
-#
-#          # NuGet package id, used for version detection & defaults to project name
-#          PACKAGE_NAME: FoysTech.EntityFrameworkCore.DataEncryption
-#
-#          # Filepath with version info, relative to root of repository & defaults to PROJECT_FILE_PATH
-#          # VERSION_FILE_PATH: Directory.Build.props
-#
-#          # Regex pattern to extract version info in a capturing group
-#          # VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
-#
-#          # Useful with external providers like Nerdbank.GitVersioning, ignores VERSION_FILE_PATH & VERSION_REGEX
-#          # VERSION_STATIC: 1.0.0
-#
-#          # Flag to toggle git tagging, enabled by default
-#          # TAG_COMMIT: true
-#
-#          # Format of the git tag, [*] gets replaced with actual version
-#          # TAG_FORMAT: v*
-#
-#          # API key to authenticate with NuGet server
-#          NUGET_KEY: ${{ secrets.GITHUB_TOKEN }}
-#
-#          # NuGet server uri hosting the packages, defaults to https://api.nuget.org
-#          NUGET_SOURCE: https://github.com/foys-tech/EntityFrameworkCore.DataEncryption
-#
-#          # Flag to toggle pushing symbols along with nuget package to the server, disabled by default
-#          # INCLUDE_SYMBOLS: false
+        run: dotnet nuget push "Foys-Tech.EntityFrameworkCore.DataEncryption.5.0.0" --api-key ${{ secrets.GITHUB_TOKEN }} --source github
