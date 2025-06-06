@@ -6,7 +6,7 @@
 		<AssemblyName>EntityFrameworkCore.DataEncryption</AssemblyName>
 		<RootNamespace>Microsoft.EntityFrameworkCore.DataEncryption</RootNamespace>
     <IsPackable>true</IsPackable>
-		<Version>6.0.0</Version>
+		<Version>8.0.0</Version>
 		<Authors>Filipe GOMES PEIXOTO(Extended)</Authors>
 		<PackageId>Foys-Tech.EntityFrameworkCore.DataEncryption</PackageId>
 		<PackageProjectUrl>https://github.com/foys-tech/EntityFrameworkCore.DataEncryption</PackageProjectUrl>
@@ -21,7 +21,7 @@
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageReleaseNotes>- Add support for storing data as binary or Base64
 - Add support for SecureString and binary model properties	</PackageReleaseNotes>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
@@ -29,7 +29,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.3" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.14" />
 	</ItemGroup>
 
 	<ItemGroup>
